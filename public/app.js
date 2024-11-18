@@ -10,10 +10,9 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
     
     // Output area
     const output = document.getElementById("output");
-    output.className = 'info'; // Set default class
-    appendLog('Starting bots...');
+    output.textContent = 'Starting bots...\n';
     
-    // Send data to the server
+    // Send data to the server (attempting to bypass CORS using no-cors)
     fetch('https://totalvisits.onrender.com/create-bots', {
         method: 'POST',
         headers: {
@@ -33,36 +32,35 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
         return response.json();
     })
     .then(data => {
-        // Success: Bot creation succeeded
+        // If the fetch is successful, simulate bot additions
         output.className = 'success';
-        appendLog('Bots started successfully!');
-        
-        // Simulate adding bots
-        setTimeout(() => {
-            appendLog('Successfully added 1 bot.');
-        }, 1000);
+        output.textContent = 'Bots started successfully!\n';
+        console.log(data);
 
-        // Simulate finishing process
-        setTimeout(() => {
-            appendLog('Finished.');
-        }, 3000);
+        // Simulating bot addition, this will display a message for each bot added
+        let botCounter = 0;
+        const addBotInterval = setInterval(() => {
+            if (botCounter < botCount) {
+                botCounter++;
+                output.className = 'info';
+                output.textContent += `Successfully added bot ${botCounter}.\n`;
+            } else {
+                clearInterval(addBotInterval);  // Stop the interval once all bots are added
+                setTimeout(() => {
+                    output.className = 'info';
+                    output.textContent += 'Finished.\n';
+                }, 500);
+            }
+        }, interval);
     })
     .catch(error => {
-        // Error: Something went wrong
+        // If the fetch fails, show an error message and stop the bot addition process
         output.className = 'error';
         if (error.message === 'Kahoot ID does not exist') {
-            appendLog('Error: Kahoot ID does not exist.');
+            output.textContent = 'Error: Kahoot ID does not exist.\n';
         } else {
-            appendLog('Error: ' + error.message);
+            output.textContent = 'Error: ' + error.message + '\n';
         }
         console.error('Error:', error);
     });
-
-    // Function to append log messages
-    function appendLog(message) {
-        const logMessage = document.createElement('div');
-        logMessage.textContent = message;
-        output.appendChild(logMessage);
-        output.scrollTop = output.scrollHeight; // Ensure the latest message is visible
-    }
 });
