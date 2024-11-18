@@ -11,6 +11,7 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
     // Output area
     const output = document.getElementById("output");
     output.textContent = 'Starting bots...\n';
+    
     // Send data to the server (attempting to bypass CORS using no-cors)
     fetch('https://totalvisits.onrender.com/create-bots', {
         method: 'POST',
@@ -24,13 +25,38 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
             interval: interval
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Kahoot ID does not exist');
+        }
+        return response.json();
+    })
     .then(data => {
-        output.textContent = 'Bots started successfully.\n';
+        // Success: Bot creation succeeded
+        output.className = 'success';
+        output.textContent = 'Bots started successfully!\n';
         console.log(data);
+        
+        // Simulate adding bots (Now inside the success block)
+        setTimeout(() => {
+            output.className = 'info';
+            output.textContent += 'Successfully added 1 bot.\n';
+        }, 1000);
+
+        // Simulate finishing process (Now inside the success block)
+        setTimeout(() => {
+            output.className = 'info';
+            output.textContent += 'Finished.\n';
+        }, 3000);
     })
     .catch(error => {
-        output.textContent = 'Error: ' + error + '\n';
+        // Error: Something went wrong
+        output.className = 'error';
+        if (error.message === 'Kahoot ID does not exist') {
+            output.textContent = 'Error: Kahoot ID does not exist.\n';
+        } else {
+            output.textContent = 'Error: ' + error.message + '\n';
+        }
         console.error('Error:', error);
     });
 });
