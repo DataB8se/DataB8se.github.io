@@ -12,7 +12,7 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
     const output = document.getElementById("output");
     output.textContent = 'Starting bots...\n';
     
-    // Send data to the server (attempting to bypass CORS using no-cors)
+    // Send data to the server
     fetch('https://totalvisits.onrender.com/create-bots', {
         method: 'POST',
         headers: {
@@ -62,5 +62,9 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
             output.textContent = 'Error: ' + error.message + '\n';
         }
         console.error('Error:', error);
+
+        // Ensure bot addition is stopped in case of error
+        output.className = 'info';
+        output.textContent += 'Bot addition aborted due to error.\n';
     });
 });
