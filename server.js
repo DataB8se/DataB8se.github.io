@@ -1,31 +1,31 @@
 const express = require('express');
 const Kahoot = require('kahoot.js-latest');
+const cors = require('cors');  // Import CORS
 const app = express();
-const port = process.env.PORT || 3000; // Use Render's PORT environment variable
+const port = process.env.PORT || 3000;
 
-// Middleware to parse JSON and URL-encoded data
+// Enable CORS for all origins
+app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve the static HTML and JS files from the 'public' folder
+// Serve static files
 app.use(express.static('public'));
 
-// POST endpoint to handle bot creation
+// POST endpoint to create bots
 app.post('/create-bots', (req, res) => {
     const { pin, botNames, botCount, interval } = req.body;
-
     if (!pin || !botNames || !botCount || !interval) {
         return res.status(400).send('Missing required parameters');
     }
 
-    // Parse bot names (assumed to be comma-separated)
     const botNamesArray = botNames.split(',').map(name => name.trim());
+    let botsSent = 0;
 
-    // Function to simulate bot joining
     const sendBot = (botIndex) => {
         const client = new Kahoot();
         const botName = botNamesArray[Math.floor(Math.random() * botNamesArray.length)] + botIndex;
-
         client.join(pin, botName).catch(err => {
             console.log(`Failed to join with bot ${botName}:`, err);
         });
@@ -43,8 +43,6 @@ app.post('/create-bots', (req, res) => {
         });
     };
 
-    // Start sending bots at the specified interval
-    let botsSent = 0;
     const botInterval = setInterval(() => {
         if (botsSent >= botCount) {
             clearInterval(botInterval);
@@ -55,7 +53,6 @@ app.post('/create-bots', (req, res) => {
     }, interval);
 });
 
-// Start the server
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });
