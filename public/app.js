@@ -10,9 +10,10 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
     
     // Output area
     const output = document.getElementById("output");
-    output.textContent = 'Starting bots...\n';
+    output.className = 'info'; // Set default class
+    appendLog('Starting bots...');
     
-    // Send data to the server (attempting to bypass CORS using no-cors)
+    // Send data to the server
     fetch('https://totalvisits.onrender.com/create-bots', {
         method: 'POST',
         headers: {
@@ -34,29 +35,34 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
     .then(data => {
         // Success: Bot creation succeeded
         output.className = 'success';
-        output.textContent = 'Bots started successfully!\n';
-        console.log(data);
+        appendLog('Bots started successfully!');
         
-        // Simulate adding bots (Now inside the success block)
+        // Simulate adding bots
         setTimeout(() => {
-            output.className = 'info';
-            output.textContent += 'Successfully added 1 bot.\n';
+            appendLog('Successfully added 1 bot.');
         }, 1000);
 
-        // Simulate finishing process (Now inside the success block)
+        // Simulate finishing process
         setTimeout(() => {
-            output.className = 'info';
-            output.textContent += 'Finished.\n';
+            appendLog('Finished.');
         }, 3000);
     })
     .catch(error => {
         // Error: Something went wrong
         output.className = 'error';
         if (error.message === 'Kahoot ID does not exist') {
-            output.textContent = 'Error: Kahoot ID does not exist.\n';
+            appendLog('Error: Kahoot ID does not exist.');
         } else {
-            output.textContent = 'Error: ' + error.message + '\n';
+            appendLog('Error: ' + error.message);
         }
         console.error('Error:', error);
     });
+
+    // Function to append log messages
+    function appendLog(message) {
+        const logMessage = document.createElement('div');
+        logMessage.textContent = message;
+        output.appendChild(logMessage);
+        output.scrollTop = output.scrollHeight; // Ensure the latest message is visible
+    }
 });
