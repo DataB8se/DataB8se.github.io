@@ -38,7 +38,7 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
         // If the fetch is successful, simulate bot additions
         botsStartedSuccessfully = true; // Bots are now starting
         output.className = 'success';
-        output.textContent = 'Bots started successfully!\n';
+        output.textContent = 'Creating Bots!...\n';
         console.log(data);
 
         // Simulating bot addition, this will display a message for each bot added
@@ -52,7 +52,7 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
                 clearInterval(addBotInterval);  // Stop the interval once all bots are added
                 setTimeout(() => {
                     output.className = 'info';
-                    output.textContent += 'Finished.\n';
+                    output.textContent += 'Successfully Finished!\n';
                 }, 500);
             }
         }, interval);
