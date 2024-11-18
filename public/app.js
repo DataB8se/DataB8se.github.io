@@ -12,6 +12,9 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
     const output = document.getElementById("output");
     output.textContent = 'Starting bots...\n';
     
+    // Flag to check if the bots were successfully created
+    let botsStartedSuccessfully = false;
+    
     // Send data to the server
     fetch('https://totalvisits.onrender.com/create-bots', {
         method: 'POST',
@@ -33,6 +36,7 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
     })
     .then(data => {
         // If the fetch is successful, simulate bot additions
+        botsStartedSuccessfully = true; // Bots are now starting
         output.className = 'success';
         output.textContent = 'Bots started successfully!\n';
         console.log(data);
@@ -64,7 +68,9 @@ document.getElementById("botForm").addEventListener("submit", function(event) {
         console.error('Error:', error);
 
         // Ensure bot addition is stopped in case of error
-        output.className = 'info';
-        output.textContent += 'Bot addition aborted due to error.\n';
+        if (!botsStartedSuccessfully) {
+            output.className = 'info';
+            output.textContent += 'Bot addition aborted due to error.\n';
+        }
     });
 });
