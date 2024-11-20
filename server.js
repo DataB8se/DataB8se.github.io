@@ -49,6 +49,10 @@ app.post('/create-bots', (req, res) => {
         });
     };
 
+    if (typeof sendBotInterval !== 'undefined') {
+        clearInterval(sendBotInterval);
+    }
+
     // Interval logic to send bots at the specified interval
     const botInterval = setInterval(() => {
         if (botsSent >= botCount) {
