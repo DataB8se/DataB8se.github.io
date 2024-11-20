@@ -15,9 +15,9 @@
             <label for="botNames">Bot Names (comma-separated):</label>
             <input type="text" id="botNames" required>
             <label for="botCount">How many bots to send?</label>
-            <input type="number" id="botCount" required>
+            <input type="number" id="botCount" required  required min="1" max="50">
             <label for="interval">Interval (ms) between bots:</label>
-            <input type="number" id="interval" required>
+            <input type="number" id="interval" required min="200">
             <button type="submit">Start Botting</button>
         </form>
         <div id="output"></div>
